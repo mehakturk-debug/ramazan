@@ -2,155 +2,152 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Gelibolu Yazıcızade - Dijital Mahya v11</title>
+    <title>Gelibolu Yazıcızade Mahya v12</title>
     <style>
-        :root { --bg-dark: #020205; --panel-bg: #fdf5e6; --gold: #d4af37; --red: #bf360c; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: var(--bg-dark); font-family: 'Georgia', serif; display: flex; color: #3d2b1f; }
-        .ramadan-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 30%, #1a1a2e 0%, #020205 100%); z-index: -1; }
+        :root { --bg: #020205; --panel: #fdf5e6; --gold: #d4af37; --red: #bf360c; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Georgia', serif; }
+        .ramadan-bg { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 50% 30%, #1a1a2e 0%, #020205 100%); z-index: -1; }
         .main-layout { display: flex; width: 100%; height: 100vh; align-items: center; justify-content: space-between; padding: 0 40px; box-sizing: border-box; }
         
         /* Yan Paneller */
-        .side-panel { width: 220px; height: 85vh; background-color: rgba(20, 20, 35, 0.95); border: 2px solid var(--gold); border-radius: 20px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; box-shadow: 0 0 40px #000; }
-        .side-text { color: #fdf5e6; font-size: 2rem; font-weight: bold; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 5px #000; }
+        .side-panel { width: 220px; height: 85vh; background: rgba(20, 20, 35, 0.95); border: 2px solid var(--gold); border-radius: 20px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; box-shadow: 0 0 40px #000; }
+        .side-text { color: #fdf5e6; font-size: 2rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px #000; letter-spacing: 2px; }
         
         /* Ana Pano */
-        .mahya-frame { background-color: var(--panel-bg); border: 12px double #8b6508; border-radius: 50px; padding: 40px; width: 52%; text-align: center; box-shadow: 0 0 100px rgba(255, 215, 0, 0.3); position: relative; }
-        .logo { max-width: 300px; margin: 0 auto 15px auto; display: block; }
-        .date-str { font-size: 1.6rem; color: #7a5901; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); display: inline-block; padding-bottom: 5px; }
-        
-        .owner-name { font-size: 3.4rem; font-weight: 900; color: #1a1a1a; text-transform: uppercase; line-height: 1; margin: 5px 0; }
-        .blessing { font-size: 2.2rem; color: #1b5e20; font-weight: bold; margin: 20px 0; font-style: italic; }
+        .mahya-frame { background: var(--panel); border: 12px double #8b6508; border-radius: 50px; padding: 35px; width: 55%; text-align: center; box-shadow: 0 0 80px rgba(255, 215, 0, 0.3); position: relative; }
+        .logo { max-width: 250px; margin-bottom: 10px; }
+        .owner-name { font-size: 3.2rem; font-weight: 900; color: #1a1a1a; text-transform: uppercase; margin: 5px 0; line-height: 1.1; }
+        .blessing { font-size: 2.2rem; color: #1b5e20; font-weight: bold; margin: 15px 0; font-style: italic; }
         
         /* Sayaç */
-        #countdown { font-size: 11rem; font-weight: 900; font-family: 'Courier New', monospace; color: var(--red); text-shadow: 3px 3px 0px #fff, 5px 5px 20px rgba(0,0,0,0.2); margin: 10px 0; line-height: 0.9; }
+        #countdown { font-size: 11rem; font-weight: 900; font-family: 'Courier New', monospace; color: var(--red); text-shadow: 3px 3px 0px #fff, 4px 4px 10px rgba(0,0,0,0.1); margin: 10px 0; line-height: 0.9; }
         .status-msg { font-size: 6rem; font-weight: 900; color: #d32f2f; display: none; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        #api-info { position: absolute; bottom: 15px; width: 100%; left: 0; font-size: 0.8rem; color: #8b6508; opacity: 0.5; }
+        #api-debug { position: absolute; bottom: 10px; width: 100%; left: 0; font-size: 0.7rem; color: #8b6508; opacity: 0.5; font-style: italic; }
     </style>
 </head>
 <body onclick="initAudio()">
 
-<div class="ramadan-bg"></div>
-<audio id="cannon-sound" preload="auto">
-    <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=6691458e-0925-4680-8777-62846988888b" type="audio/mpeg">
-</audio>
+    <div class="ramadan-bg"></div>
+    
+    <audio id="cannon-sound"><source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=6691458e-0925-4680-8777-62846988888b" type="audio/mpeg"></audio>
 
-<div class="main-layout">
-    <div class="side-panel">
-        <div class="side-text">SAHUR</div>
-        <div class="side-text">İFTAR</div>
-        <div class="side-text">FİTRE</div>
-    </div>
-
-    <div class="mahya-frame">
-        <img src="logo.png" class="logo" onerror="this.style.visibility='hidden'">
-        <div id="full-date" class="date-str">BAĞLANILIYOR...</div>
-        
-        <div id="owner-area">
-            <div style="color:#5d4037; font-weight:bold; font-size: 1.4rem;">Bugünün İftar Sahibi:</div>
-            <div id="owner1" class="owner-name">...</div>
-            <div id="owner2" class="owner-name"></div>
+    <div class="main-layout">
+        <div class="side-panel">
+            <div class="side-text">SAHUR</div>
+            <div class="side-text">İFTAR</div>
+            <div class="side-text">FİTRE</div>
         </div>
 
-        <div class="blessing">Allah Razı Olsun</div>
-
-        <div id="timer-section">
-            <div style="font-weight:bold; color:#5d4037; font-size: 1.8rem; letter-spacing: 2px;">VAKTE KALAN</div>
-            <div id="countdown">00:00:00</div>
-        </div>
-        
-        <div id="vakit-geldi" class="status-msg">İFTAR VAKTİ!</div>
-        <div id="api-info">Veriler Google Tablodan Çekiliyor...</div>
-    </div>
-
-    <div class="side-panel">
-        <div class="side-text">FİDYE</div>
-        <div class="side-text">ZEKAT</div>
-        <div class="side-text">KURBAN</div>
-    </div>
-</div>
-
-<script>
-    // Sizin en son oluşturduğunuz Web Uygulaması URL'si
-    const apiURL = "https://script.google.com/macros/s/AKfycbw3qXBMbrQbL53Nmn0jjG9vD6cM5Q2NwgA0T4qg_SAaPHw7Llpa1gY9j49vNlxPDxlbDA/exec";
-
-    function fetchData() {
-        const script = document.createElement('script');
-        // JSONP Callback kullanarak güvenlik duvarını aşıyoruz
-        script.src = apiURL + "?callback=handleResponse&t=" + Date.now();
-        document.body.appendChild(script);
-    }
-
-    function handleResponse(data) {
-        if (data.found) {
-            document.getElementById('owner1').innerText = data.sahibi1 || "";
-            document.getElementById('owner2').innerText = data.sahibi2 || "";
-            document.getElementById('full-date').innerText = new Date().toLocaleDateString('tr-TR', {year:'numeric', month:'long', day:'numeric', weekday:'long'});
-            document.getElementById('api-info').innerText = "Son Senkronizasyon: " + data.tarih;
+        <div class="mahya-frame">
+            <img src="logo.png" class="logo" onerror="this.style.display='none'">
+            <div id="full-date" style="font-weight:bold; color:#7a5901; font-size: 1.5rem;">YÜKLENİYOR...</div>
             
-            startCountdown(data.iftar, data.teravih);
-        } else {
-            document.getElementById('owner1').innerText = "TABLODA KAYIT YOK";
-            document.getElementById('api-info').innerText = "Bugünün tarihi için veri bulunamadı.";
+            <div id="owner-area">
+                <div style="margin-top:15px; font-weight:bold; color:#5d4037;">Bugünün İftar Sahibi:</div>
+                <div id="owner1" class="owner-name">...</div>
+                <div id="owner2" class="owner-name"></div>
+            </div>
+
+            <div class="blessing">Allah Razı Olsun</div>
+
+            <div id="timer-section">
+                <div style="font-weight:bold; color:#5d4037; font-size: 1.8rem; letter-spacing: 2px;">VAKTE KALAN</div>
+                <div id="countdown">00:00:00</div>
+            </div>
+            
+            <div id="vakit-geldi" class="status-msg">İFTAR VAKTİ!</div>
+            <div id="api-debug">Veriler senkronize ediliyor...</div>
+        </div>
+
+        <div class="side-panel">
+            <div class="side-text">FİDYE</div>
+            <div class="side-text">ZEKAT</div>
+            <div class="side-text">KURBAN</div>
+        </div>
+    </div>
+
+    <script>
+        // Sizin API Linkiniz (JSONP Destekli)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzUZEy58qnGBfQRV2a9hPxVF2HCvRkEEYuFCn39RksO_V6VesrQZwp4wnRxfdTXNl4-rg/exec";
+
+        function fetchData() {
+            const script = document.createElement('script');
+            // Güvenlik engelini aşmak için callback (JSONP) kullanıyoruz
+            script.src = scriptURL + "?callback=handleResponse&t=" + Date.now();
+            document.body.appendChild(script);
         }
-    }
 
-    let hasShot = false;
-    function startCountdown(iftar, teravih) {
-        if (window.mainTimer) clearInterval(window.mainTimer);
-        window.mainTimer = setInterval(() => {
-            const simdi = new Date();
-            const nowSec = (simdi.getHours() * 3600) + (simdi.getMinutes() * 60) + simdi.getSeconds();
-            
-            // İftar vaktini saniyeye çevir
-            const [iH, iM] = iftar.split(':').map(Number);
-            const iftarSec = (iH * 3600) + (iM * 60);
-
-            // Ramazan Topu
-            if (nowSec === iftarSec && !hasShot) {
-                document.getElementById('cannon-sound').play().catch(() => {});
-                hasShot = true;
-                setTimeout(() => { hasShot = false; }, 60000);
-            }
-
-            let target;
-            if (nowSec < iftarSec) {
-                target = iftar;
-                document.getElementById('vakit-geldi').style.display = "none";
-                document.getElementById('timer-section').style.display = "block";
-            } else if (nowSec < iftarSec + 900) { // 15 dakika iftar uyarısı
-                document.getElementById('timer-section').style.display = "none";
-                document.getElementById('vakit-geldi').style.display = "block";
-                return;
+        function handleResponse(data) {
+            if (data.found) {
+                document.getElementById('owner1').innerText = data.sahibi1 || "";
+                document.getElementById('owner2').innerText = data.sahibi2 || "";
+                document.getElementById('full-date').innerText = new Date().toLocaleDateString('tr-TR', {year:'numeric', month:'long', day:'numeric', weekday:'long'});
+                document.getElementById('api-debug').innerText = "Son Senkronizasyon: " + data.tarih;
+                startClock(data.iftar, data.teravih);
             } else {
-                target = teravih;
-                document.getElementById('vakit-geldi').style.display = "none";
-                document.getElementById('timer-section').style.display = "block";
+                document.getElementById('owner1').innerText = "TABLODA KAYIT YOK";
+                document.getElementById('api-debug').innerText = "Bugünün tarihi için veri bulunamadı.";
             }
+        }
 
-            const [h, m] = target.split(':');
-            const targetDate = new Date(); targetDate.setHours(h, m, 0);
-            let diff = targetDate - simdi;
+        let hasShot = false;
+        function startClock(iftar, teravih) {
+            if (window.mainTimer) clearInterval(window.mainTimer);
+            window.mainTimer = setInterval(() => {
+                const simdi = new Date();
+                const nowSec = (simdi.getHours() * 3600) + (simdi.getMinutes() * 60) + simdi.getSeconds();
+                
+                const [iH, iM] = iftar.split(':').map(Number);
+                const iftarSec = (iH * 3600) + (iM * 60);
 
-            const hh = Math.floor(diff / 3600000);
-            const mm = Math.floor((diff % 3600000) / 60000);
-            const ss = Math.floor((diff % 60000) / 1000);
+                // Ramazan Topu
+                if (nowSec === iftarSec && !hasShot) {
+                    const sound = document.getElementById('cannon-sound');
+                    sound.play().catch(() => console.log("Etkileşim gerekli"));
+                    hasShot = true;
+                    setTimeout(() => { hasShot = false; }, 60000);
+                }
 
-            document.getElementById('countdown').innerText = 
-                `${String(Math.max(0,hh)).padStart(2,'0')}:${String(Math.max(0,mm)).padStart(2,'0')}:${String(Math.max(0,ss)).padStart(2,'0')}`;
-        }, 1000);
-    }
+                let target;
+                if (nowSec < iftarSec) {
+                    target = iftar;
+                    document.getElementById('vakit-geldi').style.display = "none";
+                    document.getElementById('timer-section').style.display = "block";
+                } else if (nowSec < iftarSec + 900) { // 15 dk mesaj
+                    document.getElementById('timer-section').style.display = "none";
+                    document.getElementById('vakit-geldi').style.display = "block";
+                    return;
+                } else {
+                    target = teravih;
+                    document.getElementById('vakit-geldi').style.display = "none";
+                    document.getElementById('timer-section').style.display = "block";
+                }
 
-    function initAudio() { 
-        document.getElementById('cannon-sound').load();
-        document.getElementById('api-info').innerText = "Ses ve Veri Akışı Aktif.";
-    }
+                const [h, m] = target.split(':');
+                const tDate = new Date(); tDate.setHours(h, m, 0);
+                let diff = tDate - simdi;
 
-    // İlk çalıştırma
-    fetchData();
-    // 10 dakikada bir veriyi yenile
-    setInterval(fetchData, 600000);
-</script>
+                const hh = Math.floor(diff / 3600000);
+                const mm = Math.floor((diff % 3600000) / 60000);
+                const ss = Math.floor((diff % 60000) / 1000);
+
+                document.getElementById('countdown').innerText = 
+                    `${String(Math.max(0,hh)).padStart(2,'0')}:${String(Math.max(0,mm)).padStart(2,'0')}:${String(Math.max(0,ss)).padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        // Ses sistemi aktivasyonu
+        function initAudio() { 
+            document.getElementById('cannon-sound').load();
+            document.getElementById('api-debug').innerText = "Sistem ve Ses Aktif.";
+        }
+
+        // İlk çalıştırma
+        fetchData();
+        // 10 dakikada bir veri yenileme
+        setInterval(fetchData, 600000);
+    </script>
 </body>
 </html>
