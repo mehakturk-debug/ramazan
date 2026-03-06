@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Gelibolu Yazıcızade Mahya v12</title>
+    <title>Gelibolu Yazıcızade Mahya v13</title>
     <style>
         :root { --bg: #020205; --panel: #fdf5e6; --gold: #d4af37; --red: #bf360c; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Georgia', serif; }
@@ -20,11 +20,11 @@
         .blessing { font-size: 2.2rem; color: #1b5e20; font-weight: bold; margin: 15px 0; font-style: italic; }
         
         /* Sayaç */
-        #countdown { font-size: 11rem; font-weight: 900; font-family: 'Courier New', monospace; color: var(--red); text-shadow: 3px 3px 0px #fff, 4px 4px 10px rgba(0,0,0,0.1); margin: 10px 0; line-height: 0.9; }
+        #countdown { font-size: 11rem; font-weight: 900; font-family: 'Courier New', monospace; color: var(--red); text-shadow: 3px 3px 0px #fff; margin: 10px 0; line-height: 0.9; }
         .status-msg { font-size: 6rem; font-weight: 900; color: #d32f2f; display: none; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        #api-debug { position: absolute; bottom: 10px; width: 100%; left: 0; font-size: 0.7rem; color: #8b6508; opacity: 0.5; font-style: italic; }
+        #debug-bar { position: absolute; bottom: 10px; width: 100%; left: 0; font-size: 0.7rem; color: #8b6508; opacity: 0.5; font-style: italic; }
     </style>
 </head>
 <body onclick="initAudio()">
@@ -42,7 +42,7 @@
 
         <div class="mahya-frame">
             <img src="logo.png" class="logo" onerror="this.style.display='none'">
-            <div id="full-date" style="font-weight:bold; color:#7a5901; font-size: 1.5rem;">YÜKLENİYOR...</div>
+            <div id="full-date" style="font-weight:bold; color:#7a5901; font-size: 1.5rem;">BAĞLANILIYOR...</div>
             
             <div id="owner-area">
                 <div style="margin-top:15px; font-weight:bold; color:#5d4037;">Bugünün İftar Sahibi:</div>
@@ -58,7 +58,7 @@
             </div>
             
             <div id="vakit-geldi" class="status-msg">İFTAR VAKTİ!</div>
-            <div id="api-debug">Veriler senkronize ediliyor...</div>
+            <div id="debug-bar">Veriler senkronize ediliyor...</div>
         </div>
 
         <div class="side-panel">
@@ -69,12 +69,12 @@
     </div>
 
     <script>
-        // Sizin API Linkiniz (JSONP Destekli)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzUZEy58qnGBfQRV2a9hPxVF2HCvRkEEYuFCn39RksO_V6VesrQZwp4wnRxfdTXNl4-rg/exec";
+        // Sizin en son API Linkiniz
+        const scriptURL = "https://script.google.com/macros/s/AKfycbYp_9fTXDCh0VvVjZufsWdr-ncvcQElkzr9m1SHMAas_EqJsSlnpi7xpst5H2TkF9JoQ/exec";
 
         function fetchData() {
             const script = document.createElement('script');
-            // Güvenlik engelini aşmak için callback (JSONP) kullanıyoruz
+            // JSONP çağrısı: Güvenlik engelini aşan en sağlam yöntem
             script.src = scriptURL + "?callback=handleResponse&t=" + Date.now();
             document.body.appendChild(script);
         }
@@ -83,12 +83,12 @@
             if (data.found) {
                 document.getElementById('owner1').innerText = data.sahibi1 || "";
                 document.getElementById('owner2').innerText = data.sahibi2 || "";
-                document.getElementById('full-date').innerText = new Date().toLocaleDateString('tr-TR', {year:'numeric', month:'long', day:'numeric', weekday:'long'});
-                document.getElementById('api-debug').innerText = "Son Senkronizasyon: " + data.tarih;
+                document.getElementById('full-date').innerText = new Date().toLocaleDateString('tr-TR', {year:'numeric', month:'long', day:'numeric', weekday:'long'}) + " | 17 RAMAZAN";
+                document.getElementById('debug-bar').innerText = "Veri Alındı: " + data.tarih;
                 startClock(data.iftar, data.teravih);
             } else {
                 document.getElementById('owner1').innerText = "TABLODA KAYIT YOK";
-                document.getElementById('api-debug').innerText = "Bugünün tarihi için veri bulunamadı.";
+                document.getElementById('debug-bar').innerText = "Aranan Tarih: " + data.aranan;
             }
         }
 
@@ -102,10 +102,10 @@
                 const [iH, iM] = iftar.split(':').map(Number);
                 const iftarSec = (iH * 3600) + (iM * 60);
 
-                // Ramazan Topu
+                // Ramazan Topu Tetikleyici
                 if (nowSec === iftarSec && !hasShot) {
                     const sound = document.getElementById('cannon-sound');
-                    sound.play().catch(() => console.log("Etkileşim gerekli"));
+                    sound.play().catch(() => console.log("Lütfen ekrana bir kez tıklayın"));
                     hasShot = true;
                     setTimeout(() => { hasShot = false; }, 60000);
                 }
@@ -115,7 +115,7 @@
                     target = iftar;
                     document.getElementById('vakit-geldi').style.display = "none";
                     document.getElementById('timer-section').style.display = "block";
-                } else if (nowSec < iftarSec + 900) { // 15 dk mesaj
+                } else if (nowSec < iftarSec + 900) { // İftar vakti 15 dakika boyunca yazı kalır
                     document.getElementById('timer-section').style.display = "none";
                     document.getElementById('vakit-geldi').style.display = "block";
                     return;
@@ -138,15 +138,15 @@
             }, 1000);
         }
 
-        // Ses sistemi aktivasyonu
+        // Ses sistemi için kullanıcı etkileşimi şarttır
         function initAudio() { 
             document.getElementById('cannon-sound').load();
-            document.getElementById('api-debug').innerText = "Sistem ve Ses Aktif.";
+            document.getElementById('debug-bar').innerText = "Sistem ve Ses Aktif.";
         }
 
-        // İlk çalıştırma
+        // İlk veri çekme işlemi
         fetchData();
-        // 10 dakikada bir veri yenileme
+        // 10 dakikada bir veri güncelleme
         setInterval(fetchData, 600000);
     </script>
 </body>
